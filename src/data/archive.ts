@@ -1,0 +1,35 @@
+export const MOCK_ARCHIVE = [
+  { id: 1, char: '姓', era: '三朝書', meaning: '女性進入父權體系前的第一張標籤。', category: 'naming', nushuImg: '/assets/placeholders/nushu-xing.png' },
+  { id: 2, char: '婚', era: '哭嫁歌', meaning: '紅轎子裡的斷裂與重生。', category: 'marriage', nushuImg: '/assets/placeholders/nushu-hun.png' },
+  { id: 3, char: '姻', era: '哭嫁歌', meaning: '締結婚姻，女子轉換為父權體制的聯姻符號。', category: 'marriage', nushuImg: '/assets/placeholders/nushu-yin.png' },
+  { id: 4, char: '嫁', era: '哭嫁歌', meaning: '離開母家，步入另一個屋簷下的未知。', category: 'marriage', nushuImg: '/assets/placeholders/nushu-jia.png' },
+  { id: 5, char: '娶', era: '哭嫁歌', meaning: '男性視角下的婚姻接收與獲取動作。', category: 'marriage', nushuImg: '/assets/placeholders/nushu-qu.png' },
+  { id: 6, char: '妻', era: '哭嫁歌', meaning: '在婚姻中確立的從屬身分。', category: 'marriage', nushuImg: '/assets/placeholders/nushu-qi.png' },
+  { id: 7, char: '嬌', era: '教女歌', meaning: '美的代價是「修剪」自己。', category: 'discipline', nushuImg: '/assets/placeholders/nushu-jiao.png' },
+  { id: 8, char: '媚', era: '教女歌', meaning: '迎合外部凝視的規訓要求。', category: 'discipline', nushuImg: '/assets/placeholders/nushu-mei.png' },
+  { id: 9, char: '妒', era: '訴苦歌', meaning: '被汙名化的真實情緒。', category: 'suppression', nushuImg: '/assets/placeholders/nushu-du.png' },
+  { id: 10, char: '嫉', era: '訴苦歌', meaning: '被壓抑所衍生的必然防禦與惡意。', category: 'suppression', nushuImg: '/assets/placeholders/nushu-ji.png' },
+  { id: 11, char: '嫌', era: '冤屈歌', meaning: '那些貼在女性身上的文字暴力。', category: 'label', nushuImg: '/assets/placeholders/nushu-xian.png' },
+  { id: 12, char: '奸', era: '冤屈歌', meaning: '以「女」字旁建構的道德審判。', category: 'label', nushuImg: '/assets/placeholders/nushu-jian.png' },
+  { id: 13, char: '妖', era: '冤屈歌', meaning: '將女性特質異化為危險與異常。', category: 'label', nushuImg: '/assets/placeholders/nushu-yao.png' },
+  { id: 14, char: '妾', era: '薄命歌', meaning: '屋簷下，消失的主體位階。', category: 'identity', nushuImg: '/assets/placeholders/nushu-qie.png' },
+  { id: 15, char: '婢', era: '做工歌', meaning: '日常繁瑣勞作中的身體消亡。', category: 'labor', nushuImg: '/assets/placeholders/nushu-bei.png' },
+  { id: 16, char: '奴', era: '做工歌', meaning: '徹底被剝奪自主權的底層勞動。', category: 'labor', nushuImg: '/assets/placeholders/nushu-nu.png' },
+  { id: 17, char: '嫂', era: '姐妹歌', meaning: '結拜與支持，唯一的私密避風港。', category: 'relationship', nushuImg: '/assets/placeholders/nushu-sao.png' },
+  { id: 18, char: '姑', era: '姐妹歌', meaning: '女性間的複雜權力連結。', category: 'relationship', nushuImg: '/assets/placeholders/nushu-gu.png' },
+  { id: 19, char: '媽', era: '姐妹歌', meaning: '家庭中核心的女性庇護象徵。', category: 'relationship', nushuImg: '/assets/placeholders/nushu-ma.png' },
+  { id: 20, char: '婦', era: '婦德歌', meaning: '最終的社會框架。', category: 'role', nushuImg: '/assets/placeholders/nushu-fu.png' },
+];
+
+export const FILTER_CATEGORIES = [
+  { id: 'all', label: '全部 (All)' },
+  { id: 'naming', label: '命名' },
+  { id: 'marriage', label: '婚姻' },
+  { id: 'discipline', label: '規訓' },
+  { id: 'suppression', label: '壓抑' },
+  { id: 'label', label: '標籤' },
+  { id: 'identity', label: '身分' },
+  { id: 'labor', label: '勞動' },
+  { id: 'relationship', label: '關係' },
+  { id: 'role', label: '角色' }, // updated for simplicity length
+];

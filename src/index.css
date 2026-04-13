@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #F5F5F5;
+  --color-ink: #2C2C2C;
+  --color-cinnabar: #8B0000;
+  --font-serif: "Noto Serif TC", serif;
+  --font-sans: "Noto Sans TC", sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    letter-spacing: 0.05em;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+    font-weight: 700;
+  }
+}
+
+/* Utilities for writing modes or specific "New Chinese" styles */
+@layer utilities {
+  .writing-vertical-rl {
+    writing-mode: vertical-rl;
+  }
+  .writing-horizontal-tb {
+    writing-mode: horizontal-tb;
+  }
+  .text-shadow-ink {
+    text-shadow: 0 2px 4px rgba(44, 44, 44, 0.2);
+  }
+  .bg-rice-paper {
+    background-image: url('https://www.transparenttextures.com/patterns/rice-paper.png');
+    /* Fallback texture, transparent so it works with our paper color */
+  }
+}
