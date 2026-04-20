@@ -80,7 +80,7 @@ export default function PictureBook() {
               </p>
 
               <div className="flex flex-col gap-4 w-full">
-                {GAME_STAGES[currentStep].choices.map((choice, index) => (
+                {GAME_STAGES[currentStep].choices.map((choice) => (
                   <motion.button
                     key={choice.id}
                     whileHover={{ scale: 1.01, backgroundColor: 'rgba(44, 44, 44, 0.05)' }}
