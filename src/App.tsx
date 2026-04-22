@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Archive from './pages/Archive';
 import PictureBook from './pages/PictureBook';
 import Puzzle from './pages/Puzzle';
+import StoryBook from './pages/StoryBook';
 
 export default function App() {
   const location = useLocation();
@@ -19,8 +20,9 @@ export default function App() {
           </Link>
           <div className="flex gap-8 text-sm font-sans tracking-widest text-ink/70">
             <Link to="/archive" className="hover:text-cinnabar transition-colors">圖錄考據</Link>
-            <Link to="/story" className="hover:text-cinnabar transition-colors">字源繪本</Link>
+            <Link to="/story-book" className="hover:text-cinnabar transition-colors">故事繪本</Link>
             <Link to="/puzzle" className="hover:text-cinnabar transition-colors">互動拼圖</Link>
+            <Link to="/story" className="hover:text-cinnabar transition-colors">文字互動</Link>
           </div>
         </nav>
       </header>
@@ -30,6 +32,7 @@ export default function App() {
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<Home />} />
             <Route path="/archive" element={<Archive />} />
+            <Route path="/story-book" element={<StoryBook />} />
             <Route path="/story" element={<PictureBook />} />
             <Route path="/puzzle" element={<Puzzle />} />
           </Routes>
