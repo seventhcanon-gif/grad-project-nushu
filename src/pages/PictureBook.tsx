@@ -1,251 +1,161 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PICTURE_BOOK_DATA } from '../data/gameScript';
+import { GAME_STAGES, GAME_ENDINGS, Trait } from '../data/gameScript';
 
 export default function PictureBook() {
-  const [currentIndex, setCurrentIndex] = useState(-1); // -1 is start screen, 20 is end screen
-  const [phase, setPhase] = useState<'event' | 'emotion' | 'semantic'>('event');
+  const [currentStep, setCurrentStep] = useState<number>(-1); // -1 is the start screen
+  const [scores, setScores] = useState<Record<Trait, number>>({
+    compliance: 0,
+    sisterhood: 0,
+    labor: 0,
+    rebellion: 0,
+  });
 
   const startGame = () => {
-    setCurrentIndex(0);
-    setPhase('event');
+    setScores({ compliance: 0, sisterhood: 0, labor: 0, rebellion: 0 });
+    setCurrentStep(0);
   };
 
-  const nextPhase = () => {
-    if (phase === 'event') setPhase('emotion');
-    else if (phase === 'emotion') setPhase('semantic');
+  const selectChoice = (trait: Trait) => {
+    setScores(prev => ({ ...prev, [trait]: prev[trait] + 1 }));
+    setCurrentStep(prev => prev + 1);
   };
 
-  const nextCharacter = () => {
-    if (currentIndex < PICTURE_BOOK_DATA.length - 1) {
-      setCurrentIndex(prev => prev + 1);
-      setPhase('event');
-    } else {
-      setCurrentIndex(PICTURE_BOOK_DATA.length); // End screen
-    }
-  };
-
-  // Start Screen
-  if (currentIndex === -1) {
-    return (
-      <div className="flex flex-col h-[calc(100vh-73px)] w-full overflow-hidden bg-[#F4EFEA] relative">
-        <motion.div 
-          key="start"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.8 }}
-          className="flex flex-col items-center justify-center h-full w-full p-8 text-center"
-        >
-          <div className="text-sm font-sans tracking-[0.5em] text-ink/50 mb-4 uppercase">字元繪本</div>
-          <h1 className="text-5xl md:text-6xl font-serif text-ink tracking-[0.5em] mb-8">浮生廿字</h1>
-          <p className="text-ink/60 font-sans tracking-widest max-w-md leading-relaxed mb-16">
-            以 20 個「女」字旁漢字為引，<br/>走入女性成長與自我認同的生命軌跡。<br/><br/>
-            透過事件、情緒與語義的轉化，<br/>體驗語言符號背後的文化覺醒。
-          </p>
-          <button 
-            onClick={startGame}
-            className="px-10 py-4 border border-ink text-ink hover:bg-ink hover:text-white transition-all font-serif tracking-[0.3em] text-lg"
-          >
-            翻開繪本
-          </button>
-        </motion.div>
-      </div>
-    );
-  }
-
-  // End Screen
-  if (currentIndex === PICTURE_BOOK_DATA.length) {
-    return (
-      <div className="flex flex-col h-[calc(100vh-73px)] w-full overflow-hidden bg-[#F4EFEA] relative">
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.5 }}
-          className="flex flex-col items-center justify-center h-full w-full p-8 text-center"
-        >
-          <h2 className="text-4xl md:text-5xl font-serif text-cinnabar mb-8 tracking-widest">
-            完滿
-          </h2>
-          <div className="text-lg md:text-xl font-serif text-ink italic leading-loose tracking-widest mb-10 border-b border-ink/10 pb-10">
-            「不再是傳統的女與子，而是生命本身的完整與和解。」
-          </div>
-          <button 
-            onClick={startGame}
-            className="px-8 py-3 bg-ink text-white hover:bg-cinnabar focus:outline-none transition-colors font-sans tracking-widest text-sm"
-          >
-            重新閱讀
-          </button>
-        </motion.div>
-      </div>
-    );
-  }
-
-  const currentData = PICTURE_BOOK_DATA[currentIndex];
-
-  // Calculate visual styles based on phase
-  const getBackgroundColor = () => {
-    if (phase === 'event') return 'bg-[#F9F7F5]'; // Light background for events
-    if (phase === 'emotion') return 'bg-[#1A1A1A]'; // Dark/intense for emotion
-    return 'bg-[#F4EFEA]'; // Return to paper color for semantic
-  };
-
-  const getTextColor = () => {
-    if (phase === 'emotion') return 'text-[#F0F0F0]';
-    return 'text-[#2C2C2C]';
-  };
-
-  const getCharacterStyle = () => {
-    if (phase === 'event') return { scale: 1, opacity: 0.9, letterSpacing: 'normal' };
-    if (phase === 'emotion') return { scale: 1.1, opacity: 0.3, filter: 'blur(2px)' }; // Distorted
-    return { scale: 1.2, opacity: 1, textShadow: '0 0 20px rgba(200,160,120,0.5)' }; // Radiant
+  const getEnding = () => {
+    // Find highest score
+    let highestTrait: Trait = 'compliance';
+    let maxScore = -1;
+    (Object.keys(scores) as Trait[]).forEach((trait) => {
+      if (scores[trait] > maxScore) {
+        maxScore = scores[trait];
+        highestTrait = trait;
+      }
+    });
+    return GAME_ENDINGS.find(e => e.id === highestTrait)!;
   };
 
   return (
-    <div className={`flex flex-col h-[calc(100vh-73px)] w-full overflow-hidden transition-colors duration-1000 ${getBackgroundColor()} relative`}>
-      
-      {/* Background Gradient overlay corresponding to stage */}
-      <div className={`absolute inset-0 opacity-20 bg-gradient-to-br ${currentData.colorClass} mix-blend-multiply transition-opacity duration-1000`} />
-      <div className="absolute inset-0 bg-[url('/assets/noise.png')] opacity-20 mix-blend-overlay pointer-events-none"></div>
-
-      <div className="flex-1 flex flex-col items-center justify-center relative z-10 p-8 md:p-16">
+    <div className="flex flex-col h-[calc(100vh-73px)] w-full overflow-hidden bg-paper relative">
+      <AnimatePresence mode="wait">
         
-        {/* Stage Indicator */}
-        <motion.div 
-          key={`stage-${currentData.stage}`}
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className={`absolute top-8 left-8 md:top-12 md:left-12 text-sm font-sans tracking-[0.3em] ${getTextColor()} opacity-50`}
-        >
-          階段 {currentData.stage}：{currentData.stageTitle}
-        </motion.div>
-
-        {/* Progress */}
-        <div className={`absolute top-8 right-8 md:top-12 md:right-12 text-sm font-serif ${getTextColor()} opacity-50 tracking-widest`}>
-          {currentIndex + 1} / 20
-        </div>
-
-        {/* Main Character Display */}
-        <div className="relative mb-16 flex flex-col items-center">
-          <motion.div
-            key={`char-${currentData.id}-${phase}`}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={getCharacterStyle()}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
-            className={`text-8xl md:text-[10rem] font-serif ${phase === 'emotion' ? 'text-cinnabar' : getTextColor()}`}
-            style={{ fontFamily: '"Noto Serif TC", serif' }}
-          >
-            {currentData.char}
-          </motion.div>
+        {/* Start Screen */}
+        {currentStep === -1 && (
           <motion.div 
-            className={`text-sm tracking-[0.5em] mt-4 opacity-40 font-sans ${getTextColor()}`}
-            animate={{ opacity: phase === 'emotion' ? 0 : 0.4 }}
+            key="start"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.8 }}
+            className="flex flex-col items-center justify-center h-full w-full p-8 text-center"
           >
-            {currentData.pinyin}
+            <h1 className="text-5xl font-serif text-ink tracking-[0.5em] mb-6">生命史迴圈</h1>
+            <p className="text-ink/60 font-sans tracking-widest max-w-md leading-relaxed mb-12">
+              透過六個生命切片的選擇，妳將決定自己在這個時代的命運走向。<br/>將會成為哪首女書歌謠的主角？
+            </p>
+            <button 
+              onClick={startGame}
+              className="px-10 py-4 border border-ink text-ink hover:bg-ink hover:text-white transition-all font-serif tracking-[0.3em] text-lg"
+            >
+              開啟命運
+            </button>
           </motion.div>
-        </div>
+        )}
 
-        {/* Text Content Layer */}
-        <div className="h-48 flex items-center justify-center max-w-2xl w-full text-center">
-          <AnimatePresence mode="wait">
-            {phase === 'event' && (
-              <motion.div
-                key="event"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.8 }}
-                className={`text-xl md:text-2xl font-serif leading-loose tracking-[0.1em] ${getTextColor()}`}
-              >
-                {currentData.eventText}
-              </motion.div>
-            )}
+        {/* Game Stages */}
+        {currentStep >= 0 && currentStep < GAME_STAGES.length && (
+          <motion.div 
+            key={`stage-${currentStep}`}
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -50 }}
+            transition={{ duration: 0.6 }}
+            className="flex flex-col items-center justify-center h-full w-full p-8 md:p-24 overflow-y-auto custom-scrollbar"
+          >
+            <div className="max-w-2xl w-full">
+              <div className="text-cinnabar font-serif tracking-[0.5em] text-sm mb-4 border-l-2 border-cinnabar pl-4">
+                {GAME_STAGES[currentStep].title}
+              </div>
+              <p className="text-xl md:text-2xl font-serif leading-loose tracking-[0.1em] text-ink mb-12 text-justify">
+                {GAME_STAGES[currentStep].description}
+              </p>
 
-            {phase === 'emotion' && (
-              <motion.div
-                key="emotion"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.8 }}
-                className={`text-xl md:text-2xl font-serif italic leading-loose tracking-[0.2em] text-white`}
-              >
-                {currentData.emotionText}
-              </motion.div>
-            )}
+              <div className="flex flex-col gap-4 w-full">
+                {GAME_STAGES[currentStep].choices.map((choice) => (
+                  <motion.button
+                    key={choice.id}
+                    whileHover={{ scale: 1.01, backgroundColor: 'rgba(44, 44, 44, 0.05)' }}
+                    whileTap={{ scale: 0.99 }}
+                    onClick={() => selectChoice(choice.trait)}
+                    className="w-full text-left p-6 border border-ink/20 text-ink/80 font-sans tracking-widest leading-relaxed hover:border-cinnabar transition-colors relative group"
+                  >
+                    <span className="absolute left-6 top-1/2 -translate-y-1/2 text-cinnabar opacity-0 group-hover:opacity-100 transition-opacity">
+                      ❖
+                    </span>
+                    <span className="group-hover:ml-6 transition-all duration-300 block">
+                      {choice.text}
+                    </span>
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
 
-            {phase === 'semantic' && (
-              <motion.div
-                key="semantic"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 1 }}
-                className={`text-xl md:text-2xl font-serif leading-loose tracking-[0.1em] text-[#C8A078]`}
-              >
-                {currentData.semanticConversionText}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+        {/* Ending Screen */}
+        {currentStep === GAME_STAGES.length && (() => {
+          const ending = getEnding();
+          return (
+            <motion.div 
+              key="ending"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1.5 }}
+              className="flex flex-col md:flex-row h-full w-full"
+            >
+              {/* Ending Image */}
+              <div className="flex-1 w-full h-[40vh] md:h-full relative overflow-hidden bg-ink/10 flex items-center justify-center">
+                <motion.img 
+                  initial={{ scale: 1.1 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 5, ease: "easeOut" }}
+                  src={ending.imgSrc} 
+                  alt={ending.title} 
+                  className="w-full h-full object-cover opacity-90 mix-blend-multiply" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-paper/80 to-transparent md:bg-gradient-to-r md:from-transparent md:to-paper"></div>
+              </div>
+              
+              {/* Ending Text */}
+              <div className="flex-1 flex flex-col justify-center p-8 md:p-16 lg:p-24 overflow-y-auto custom-scrollbar bg-paper">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1, delay: 0.5 }}
+                >
+                  <div className="text-sm font-sans tracking-[0.5em] text-ink/50 mb-2 uppercase">FINAL DESTINATION</div>
+                  <h2 className="text-4xl md:text-5xl font-serif text-cinnabar mb-8 tracking-widest">
+                    {ending.title}
+                  </h2>
+                  <div className="text-lg md:text-xl font-serif text-ink italic leading-loose tracking-widest mb-10 border-b border-ink/10 pb-10">
+                    {ending.quote}
+                  </div>
+                  <div className="text-base font-serif text-ink/80 leading-[2.5em] tracking-widest whitespace-pre-wrap text-justify mb-16">
+                    {ending.fullText}
+                  </div>
+                  
+                  <button 
+                    onClick={startGame}
+                    className="px-8 py-3 bg-ink text-white hover:bg-cinnabar focus:outline-none transition-colors font-sans tracking-widest text-sm"
+                  >
+                    重啟迴圈
+                  </button>
+                </motion.div>
+              </div>
+            </motion.div>
+          );
+        })()}
 
-        {/* Interaction Controls */}
-        <div className="mt-16 flex flex-col items-center h-20">
-          <AnimatePresence mode="wait">
-            {phase === 'event' && (
-              <motion.button
-                key="btn-event"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={nextPhase}
-                className="group flex flex-col items-center"
-              >
-                <div className="w-12 h-12 rounded-full border border-ink/30 flex items-center justify-center group-hover:border-ink transition-colors cursor-pointer">
-                  <div className="w-2 h-2 rounded-full bg-ink/30 group-hover:bg-ink transition-colors" />
-                </div>
-                <span className="text-xs font-sans tracking-[0.3em] text-ink/50 mt-4 group-hover:text-ink transition-colors">深入內在</span>
-              </motion.button>
-            )}
-
-            {phase === 'emotion' && (
-              <motion.button
-                key="btn-emotion"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={nextPhase}
-                className="group flex flex-col items-center"
-              >
-                <div className="w-12 h-12 rounded-full border border-white/30 flex items-center justify-center group-hover:border-white transition-colors cursor-pointer">
-                  <div className="w-3 h-3 bg-white/30 group-hover:bg-white rotate-45 transition-colors" />
-                </div>
-                <span className="text-xs font-sans tracking-[0.3em] text-white/50 mt-4 group-hover:text-white transition-colors">覺醒</span>
-              </motion.button>
-            )}
-
-            {phase === 'semantic' && (
-              <motion.button
-                key="btn-semantic"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={nextCharacter}
-                className="group flex flex-col items-center"
-              >
-                <div className="w-12 h-12 rounded-full border border-[#C8A078]/50 flex items-center justify-center group-hover:border-[#C8A078] transition-colors cursor-pointer">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#C8A078] opacity-50 group-hover:opacity-100 transition-opacity">
-                    <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-                <span className="text-xs font-sans tracking-[0.3em] text-[#C8A078]/70 mt-4 group-hover:text-[#C8A078] transition-colors">
-                  {currentIndex < PICTURE_BOOK_DATA.length - 1 ? '下一字' : '完結'}
-                </span>
-              </motion.button>
-            )}
-          </AnimatePresence>
-        </div>
-      </div>
+      </AnimatePresence>
     </div>
   );
 }
