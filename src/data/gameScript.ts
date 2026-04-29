@@ -1,122 +1,236 @@
-export type Trait = 'sisterhood' | 'compliance' | 'rebellion' | 'labor';
+export type StagePhase = 1 | 2 | 3 | 4;
 
-export interface Choice {
-  id: string;
-  text: string;
-  trait: Trait;
-}
-
-export interface Stage {
+export interface CharacterStory {
   id: number;
-  title: string;
-  description: string;
-  choices: Choice[];
+  char: string;
+  pinyin: string;
+  stage: StagePhase;
+  stageTitle: string;
+  eventText: string;
+  emotionText: string;
+  semanticConversionText: string;
+  colorClass: string;
 }
 
-export interface Ending {
-  id: Trait;
-  title: string;
-  imgSrc: string;
-  quote: string;
-  fullText: string;
-}
-
-export const GAME_STAGES: Stage[] = [
+export const PICTURE_BOOK_DATA: CharacterStory[] = [
   {
     id: 1,
-    title: '第一幕：降生',
-    description: '妳降生在湖南江永的一戶普通農家。產婆喊了聲「是個姑娘」，父親便皺起了眉頭，轉身離去。妳逐漸懂事後，發現家中好吃的永遠先留給哥哥。此時的妳會：',
-    choices: [
-      { id: '1a', text: '主動幫忙生火做飯，默默聽話以換取父母的讚許。', trait: 'compliance' },
-      { id: '1b', text: '在夜晚跑去找村裡的女孩們，圍在一起玩著紅線，忘記家中的不快。', trait: 'sisterhood' },
-      { id: '1c', text: '跟著母親下田，心裡想著只要自己夠努力，總有一天能不被輕視。', trait: 'labor' },
-      { id: '1d', text: '對不平等待遇感到憤怒，偷偷弄壞哥哥的玩具作為報復。', trait: 'rebellion' }
-    ]
+    char: '始',
+    pinyin: 'shǐ',
+    stage: 1,
+    stageTitle: '懵懂與規訓',
+    eventText: '出生被期待為男嬰卻是女嬰，伴隨著家族的嘆息。',
+    emotionText: '潛意識裡埋藏著失落與被忽視的陰影。',
+    semanticConversionText: '生命韌性的最初萌芽，在邊緣中野蠻生長。',
+    colorClass: 'from-[#D2C5B5] to-[#E3D3C2]'
   },
   {
     id: 2,
-    title: '第二幕：女工',
-    description: '長到十歲，妳被要求坐在昏暗的堂屋裡練習刺繡。針尖刺破了手指，血珠滲了出來，這是每個女孩必經的「修剪」。妳會：',
-    choices: [
-      { id: '2a', text: '強忍著痛，將血跡藏起，努力繡出最平滑的牡丹。', trait: 'compliance' },
-      { id: '2b', text: '將繡線纏成無意義的亂結，心中充滿被困住的焦躁。', trait: 'rebellion' },
-      { id: '2c', text: '日以繼夜地趕工，只為了多換幾文錢補貼家用。', trait: 'labor' },
-      { id: '2d', text: '看著旁邊女孩繡下奇特如蚊足的符號，好奇地與她約定互相教導。', trait: 'sisterhood' }
-    ]
+    char: '姓',
+    pinyin: 'xìng',
+    stage: 1,
+    stageTitle: '懵懂與規訓',
+    eventText: '意識到自己僅是過客，終將「冠夫姓」或被移出族譜。',
+    emotionText: '內心充滿漂泊無依與虛無感。',
+    semanticConversionText: '從血緣的放逐中，尋找基於自我意志的認同。',
+    colorClass: 'from-[#C4B7A6] to-[#D5C8B7]'
   },
   {
     id: 3,
-    title: '第三幕：結拜',
-    description: '某個上巳節，妳與幾個村裡的姑娘在河邊洗髮。其中一人拿出紅紙與毛筆，提議大家結為「老同」，一生相伴。妳的決定是：',
-    choices: [
-      { id: '3a', text: '滿心歡喜地簽上自己的名字，並承諾一生交換手帕與心事。', trait: 'sisterhood' },
-      { id: '3b', text: '拒絕了，因為母親說女子終究是要嫁進別人家，結拜無用。', trait: 'compliance' },
-      { id: '3c', text: '看著清澈的河水，只覺得未來的命運如浮木般無可奈何，沒有作聲。', trait: 'rebellion' },
-      { id: '3d', text: '笑著答應，但心裡依舊掛念著明天田裡還有一大堆沒做完的農活。', trait: 'labor' }
-    ]
+    char: '妹',
+    pinyin: 'mèi',
+    stage: 1,
+    stageTitle: '懵懂與規訓',
+    eventText: '與村裡年紀相仿的女孩結為「老同」。',
+    emotionText: '感受到前所未有的溫暖與深深的共鳴。',
+    semanticConversionText: '將「女性情誼」轉化為抵禦外界風雨的精神避風港。',
+    colorClass: 'from-[#D1A7A7] to-[#E1B6B6]'
   },
   {
     id: 4,
-    title: '第四幕：哭嫁',
-    description: '紅轎來了。鞭炮聲響徹雲霄，妳的父母正在院子裡接受祝賀。依據傳統，妳必須坐在堂屋裡放聲大哭，這被稱為「哭嫁」。妳在哭聲中想著：',
-    choices: [
-      { id: '4a', text: '痛斥父母的偏心，將半生的委屈用最尖銳的字句哭喊出來。', trait: 'rebellion' },
-      { id: '4b', text: '回憶起與「老同」的時光，為即將斷裂的姊妹情誼流下真實的眼淚。', trait: 'sisterhood' },
-      { id: '4c', text: '順著長輩教導的詞句，一字一句完美地唱完，盡完女兒最後的責任。', trait: 'compliance' },
-      { id: '4d', text: '害怕前方的婆家會有做不完的苦活，為未知的疲憊感到恐懼。', trait: 'labor' }
-    ]
+    char: '妙',
+    pinyin: 'miào',
+    stage: 1,
+    stageTitle: '懵懂與規訓',
+    eventText: '少女時期的短暫自由與勞作間隙的幻想。',
+    emotionText: '靈魂感到輕盈，對未來充滿憧憬。',
+    semanticConversionText: '覺察自身潛能，體驗生命原初的創造力。',
+    colorClass: 'from-[#B5C2B7] to-[#C7D4C9]'
   },
   {
     id: 5,
-    title: '第五幕：侍奉',
-    description: '婚後，妳成為了屋簷下的影子。婆婆嚴厲，丈夫寡言。某天晚上，妳實在累得直不起腰，卻還要為全家縫補衣裳。此時，妳會：',
-    choices: [
-      { id: '5a', text: '點上油燈，一針一線繼續縫補，雖然麻木，但這就是女人的命。', trait: 'labor' },
-      { id: '5b', text: '將一塊偷偷留下的手帕拿出來，用江永女書寫下今日的苦楚。', trait: 'rebellion' },
-      { id: '5c', text: '細心縫補，期盼著公婆和丈夫能在明日給妳一個滿意的眼神。', trait: 'compliance' },
-      { id: '5d', text: '看著老同寄來的八角花箋，想像著她在遠方是否也看著同一輪明月。', trait: 'sisterhood' }
-    ]
+    char: '嬌',
+    pinyin: 'jiāo',
+    stage: 1,
+    stageTitle: '懵懂與規訓',
+    eventText: '被要求纏足或學習女工，以符合社會對「柔弱美」的期待。',
+    emotionText: '肉體與精神雙重壓抑下的疼痛。',
+    semanticConversionText: '反思「美」的暴力本質，看穿社會建構的審美標準。',
+    colorClass: 'from-[#A89898] to-[#B8A7A7]'
   },
   {
     id: 6,
-    title: '第六幕：終章',
-    description: '多年過去，妳的雙鬢染霜。妳的一生即將走到盡頭，在臨終的床榻前，妳的膝下有幾個晚輩。關於妳這一生的痕跡，妳的最後交代是：',
-    choices: [
-      { id: '6a', text: '「我只是一個安分守己的婦道人家，把我葬在家族的角落就好。」', trait: 'compliance' },
-      { id: '6b', text: '「把那些陪伴我大半生的繡線和農具燒給我吧，我習慣它們了。」', trait: 'labor' },
-      { id: '6c', text: '「記得派人去通知我的老同，讓她為我唱最後一曲輓歌。」', trait: 'sisterhood' },
-      { id: '6d', text: '「把我的女書手稿全燒了！帶到地府，我要親自去向閻羅王告那一狀！」', trait: 'rebellion' }
-    ]
-  }
-];
-
-export const GAME_ENDINGS: Ending[] = [
-  {
-    id: 'sisterhood',
-    title: '結局：金蘭之契',
-    imgSrc: '/assets/story/jiemei.png',
-    quote: '「君發言來妾記錄，扇面手帕皆文章。不求達官貴人懂，只留心事與紅顏。」',
-    fullText: '妳的一生，雖在父權體系中流轉，但從未真正孤單。從三朝書到八角花箋，妳與那些同樣被邊緣化的女性們，用細密的菱形文字編織成了一張溫柔的網。\n\n這些只有女人能懂的密語，穿越了厚重的磚牆與森嚴的規矩，成為你們彼此的精神避風港。當妳閉上眼時，耳邊響起的是老同溫柔的歌聲。妳的名字或許不會留在族譜上，但卻永遠活在姊妹們傳唱的歌謠裡。',
+    char: '妝',
+    pinyin: 'zhuāng',
+    stage: 2,
+    stageTitle: '過渡與枷鎖',
+    eventText: '出嫁前的開臉、絞面與盛裝打扮。',
+    emotionText: '告別過去的焦慮與自我割裂感。',
+    semanticConversionText: '不再視化妝為取悅，而是面對殘酷外界的「武裝」與面具。',
+    colorClass: 'from-[#8C3A3A] to-[#A04545]'
   },
   {
-    id: 'compliance',
-    title: '結局：無聲的磨礪',
-    imgSrc: '/assets/story/jiaonu.png',
-    quote: '「行步需輕聲要細，低頭順目是閨儀。千針萬線不叫苦，只盼郎君莫嫌棄。」',
-    fullText: '妳選擇了成為「完美」的女人。妳將自己打磨、修剪，去適應每一個規訓的模具。從懂事聽話的女兒，到低眉順眼的新妻，再到嚴厲持家的婆婆，妳的一生無懈可擊。\n\n然而，代價是巨大的。在漫長的歲月中，那個曾經有著自己喜怒哀樂的小女孩，早已被層層疊疊的「婦德」所掩蓋。妳成為了宗族體制中最堅固的一塊磚，卻也把自己困在了無聲的高牆之內。',
+    id: 7,
+    char: '嫁',
+    pinyin: 'jià',
+    stage: 2,
+    stageTitle: '過渡與枷鎖',
+    eventText: '坐上紅轎，離開原生家庭的送親儀式。',
+    emotionText: '對未知的恐懼與身不由己的無奈。',
+    semanticConversionText: '象徵女性在人生階段中的選擇與被選擇，反映婚姻制度下的社會期待與個體抉擇之間的張力。',
+    colorClass: 'from-[#732C2C] to-[#8A3737]'
   },
   {
-    id: 'rebellion',
-    title: '結局：化紙為蝶',
-    imgSrc: '/assets/story/suku.png',
-    quote: '「日夜操勞不得歇，婆母挑剔夫君冷。欲向高天問公道，唯有化墨寫菱文。」',
-    fullText: '妳的心中始終燃燒著一把不甘的火。儘管身體遭到禁錮，儘管不得不屈服於傳統，但妳找到了屬於自己的武器——女書。妳將所有的憤恨、冤屈與控訴，化作紙上的黑墨。\n\n這些被視為「蚊足文字」的偏旁符號，是妳劃破時代黑夜的匕首。臨終前，妳讓那些載滿辛酸的手稿隨火化作灰燼。雖然肉體消亡，但妳的靈魂如同涅槃的黑蝶，帶著最真實、最不屈的情緒，傲然離去。',
+    id: 8,
+    char: '婦',
+    pinyin: 'fù',
+    stage: 2,
+    stageTitle: '過渡與枷鎖',
+    eventText: '日復一日繁重且無償的家務與農活。',
+    emotionText: '身體極度疲憊，精神逐漸麻木。',
+    semanticConversionText: '在極度勞動中，感知到自身承載整個家族生存的強大力量。',
+    colorClass: 'from-[#5E4A3D] to-[#705A4B]'
   },
   {
-    id: 'labor',
-    title: '結局：織痕與塵埃',
-    imgSrc: '/assets/story/zuogong.png',
-    quote: '「晨起劈柴夜打水，粗布麻衣汗難乾。雙手磨出層層繭，只求換得一口飯。」',
-    fullText: '這是一個充滿汗水與疲憊的寫實人生。妳沒有太多時間去感春悲秋，也沒有餘力去寫詩結拜。妳的雙手長滿了老繭，每一天都在與生計和繁雜的家務搏鬥。\n\n織布機的經緯線、灶台的柴火、田間的泥土，構成了妳殘酷的生命史。當歲月將妳榨乾，妳就像一抹塵埃般平靜地隱沒在黃土之中。雖然無名，但正是無數個像妳這樣彎著腰的女性，用血汗撐起了那個時代的根基。',
+    id: 9,
+    char: '姻',
+    pinyin: 'yīn',
+    stage: 2,
+    stageTitle: '過渡與枷鎖',
+    eventText: '深刻體會到婚姻的本質是家族契約與傳宗接代。',
+    emotionText: '如墜牢籠，充滿被困與窒息感。',
+    semanticConversionText: '看透制度的本質，內心開始從傳統的「賢妻」角色中抽離。',
+    colorClass: 'from-[#4A4D54] to-[#595D65]'
+  },
+  {
+    id: 10,
+    char: '妥',
+    pinyin: 'tuǒ',
+    stage: 2,
+    stageTitle: '過渡與枷鎖',
+    eventText: '在新家庭中面對婆媳或夫妻衝突，被迫低頭認錯。',
+    emotionText: '委屈、憋悶與無聲的落淚。',
+    semanticConversionText: '將妥協重新定義為一種「隱忍的生存策略」，而非真正的屈服。',
+    colorClass: 'from-[#3A3836] to-[#4A4846]'
+  },
+  {
+    id: 11,
+    char: '妒',
+    pinyin: 'dù',
+    stage: 3,
+    stageTitle: '衝突與覺醒',
+    eventText: '與其他女性在家族中的資源競爭。',
+    emotionText: '交織著嫉妒、自卑與怨恨的複雜情緒。',
+    semanticConversionText: '轉化為自我認同的焦慮，表現女性在比較與社會壓力下的內在情緒，看清敵人其實是體制而非其他女性。',
+    colorClass: 'from-[#1A2518] to-[#253523]'
+  },
+  {
+    id: 12,
+    char: '婉',
+    pinyin: 'wǎn',
+    stage: 3,
+    stageTitle: '衝突與覺醒',
+    eventText: '被要求輕聲細語，禁止表達憤怒與真實主張。',
+    emotionText: '失語的痛苦與深深的壓抑。',
+    semanticConversionText: '在沈默與陰影中，發展出「女書」等專屬的私密抗爭語言。',
+    colorClass: 'from-[#181825] to-[#232335]'
+  },
+  {
+    id: 13,
+    char: '妖',
+    pinyin: 'yāo',
+    stage: 3,
+    stageTitle: '衝突與覺醒',
+    eventText: '展現出不符合傳統的才華或慾望，被斥責為不守婦道。',
+    emotionText: '初期的羞恥感逐漸轉為狂烈的憤怒。',
+    semanticConversionText: '擁抱「異端」的標籤，將污名轉化為顛覆主流的強大力量。',
+    colorClass: 'from-[#3D143D] to-[#4F1A4F]'
+  },
+  {
+    id: 14,
+    char: '妄',
+    pinyin: 'wàng',
+    stage: 3,
+    stageTitle: '衝突與覺醒',
+    eventText: '在深夜裡偷學文字，或渴望走出村落的邊界。',
+    emotionText: '內心湧動著熱烈而危險的渴望。',
+    semanticConversionText: '打破思想禁錮，將「妄想」化為敢於想像另一種生存可能的勇氣。',
+    colorClass: 'from-[#4D1A1A] to-[#632222]'
+  },
+  {
+    id: 15,
+    char: '奴',
+    pinyin: 'nú',
+    stage: 3,
+    stageTitle: '衝突與覺醒',
+    eventText: '體認到自己在家中僅作為生育工具或附屬品的底層地位。',
+    emotionText: '絕望與極致的痛苦。',
+    semanticConversionText: '重新詮釋為自我解放的起點，透過反轉語義，使原本帶有壓迫意味的字詞轉化為覺醒與反思的契機。',
+    colorClass: 'from-[#0A0A0A] to-[#141414]'
+  },
+  {
+    id: 16,
+    char: '妨',
+    pinyin: 'fáng',
+    stage: 4,
+    stageTitle: '釋放與重塑',
+    eventText: '首次明確拒絕配合某項不合理的家族規定。',
+    emotionText: '衝突帶來的恐懼與隨之而來的堅定。',
+    semanticConversionText: '從體制的「順從者」驕傲地轉變為父權秩序的「妨礙者」。',
+    colorClass: 'from-[#2C4A5A] to-[#395D71]'
+  },
+  {
+    id: 17,
+    char: '媼',
+    pinyin: 'ǎo',
+    stage: 4,
+    stageTitle: '釋放與重塑',
+    eventText: '歲月流逝，容顏老去，但也隨之擺脫了生育要求與男性凝視。',
+    emotionText: '內心感到前所未有的平靜、豁達與釋然。',
+    semanticConversionText: '不再被外貌定義，獲得身體與精神最終的自主權。',
+    colorClass: 'from-[#5E6A75] to-[#768591]'
+  },
+  {
+    id: 18,
+    char: '孀',
+    pinyin: 'shuāng',
+    stage: 4,
+    stageTitle: '釋放與重塑',
+    eventText: '伴侶過世，獨自面對社會的邊緣化與閒言碎語。',
+    emotionText: '孤獨，但伴隨著徹底的自由。',
+    semanticConversionText: '在失去中，獲得不被任何人（父親、丈夫、兒子）定義的絕對獨立狀態。',
+    colorClass: 'from-[#A1AAB3] to-[#B8C0C8]'
+  },
+  {
+    id: 19,
+    char: '婆',
+    pinyin: 'pó',
+    stage: 4,
+    stageTitle: '釋放與重塑',
+    eventText: '看著新一代的女孩降生，面對是否要將傳統枷鎖套在她身上的抉擇。',
+    emotionText: '悲憫與決斷。',
+    semanticConversionText: '斬斷痛苦的循環，將女書與反抗的智慧傳承給下一代。',
+    colorClass: 'from-[#D0CACA] to-[#E3DDDD]'
+  },
+  {
+    id: 20,
+    char: '好',
+    pinyin: 'hǎo',
+    stage: 4,
+    stageTitle: '釋放與重塑',
+    eventText: '臨終初回顧一生，在紙上寫下最後一個女書字符。',
+    emotionText: '圓滿、和解與無上的自豪。',
+    semanticConversionText: '重新定義「好」。不再是傳統的「女+子」，而是女性生命本身的完整、自足與最終的和解。',
+    colorClass: 'from-[#EBEBEB] to-[#FFFFFF]'
   }
 ];
