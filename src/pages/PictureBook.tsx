@@ -29,11 +29,23 @@ export default function PictureBook() {
   const [selectedOption, setSelectedOption] = useState<WordOption | null>(null);
   const [showQuestion, setShowQuestion] = useState(false);
   const [shakeKey, setShakeKey] = useState(0);
+  const [incorrectAnswers, setIncorrectAnswers] = useState<Array<{
+    stageTitle: string;
+    char: string;
+    feedback: string;
+  }>>([]);
+  const [activeReviewAnswer, setActiveReviewAnswer] = useState<{
+    stageTitle: string;
+    char: string;
+    feedback: string;
+  } | null>(null);
 
   const startGame = () => {
     setCurrentStageIndex(0);
     setSelectedOption(null);
     setShowQuestion(false);
+    setIncorrectAnswers([]);
+    setActiveReviewAnswer(null);
   };
 
   const handleOptionClick = (option: WordOption) => {
@@ -41,6 +53,17 @@ export default function PictureBook() {
     if (!option.isCorrect) {
       // Trigger shake animation
       setShakeKey(prev => prev + 1);
+      
+      // Add wrong selection to incorrectAnswers
+      setIncorrectAnswers(prev => {
+        const alreadyExists = prev.some(item => item.char === option.char && item.stageTitle === currentStage.title);
+        if (alreadyExists) return prev;
+        return [...prev, {
+          stageTitle: currentStage.title,
+          char: option.char,
+          feedback: option.feedback
+        }];
+      });
     }
   };
 
@@ -49,6 +72,7 @@ export default function PictureBook() {
       setCurrentStageIndex(prev => prev + 1);
       setSelectedOption(null);
       setShowQuestion(false);
+      setActiveReviewAnswer(null);
     } else {
       setCurrentStageIndex(MATCHING_GAME_STAGES.length);
     }
@@ -152,6 +176,65 @@ export default function PictureBook() {
             )}
           </AnimatePresence>
         </div>
+
+        {/* Bottom Left: Review incorrect answers */}
+        <div className="mt-12 pt-6 border-t border-white/10 w-full">
+          <div className="text-xs font-sans tracking-[0.2em] text-white/40 mb-3 uppercase flex justify-between items-center select-none">
+            <span>錯題溫故 (點擊隨時複習)</span>
+            {incorrectAnswers.length > 0 && (
+              <button 
+                onClick={() => { setIncorrectAnswers([]); setActiveReviewAnswer(null); }}
+                className="text-[10px] text-white/30 hover:text-cinnabar transition-colors cursor-pointer"
+              >
+                清空記錄
+              </button>
+            )}
+          </div>
+          {incorrectAnswers.length === 0 ? (
+            <div className="text-xs font-serif text-white/30 italic">尚無錯誤記錄，勇於試錯以深化記憶</div>
+          ) : (
+            <div className="space-y-4">
+              <div className="flex flex-wrap gap-2 max-h-24 overflow-y-auto pr-2 custom-scrollbar">
+                {incorrectAnswers.map((item, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setActiveReviewAnswer(activeReviewAnswer?.char === item.char && activeReviewAnswer?.stageTitle === item.stageTitle ? null : item)}
+                    className={`px-3 py-1.5 border text-xs font-serif transition-all rounded-sm flex items-center gap-1.5 cursor-pointer
+                      ${activeReviewAnswer?.char === item.char && activeReviewAnswer?.stageTitle === item.stageTitle
+                        ? 'border-cinnabar bg-cinnabar/20 text-white' 
+                        : 'border-red-500/20 bg-red-950/20 text-red-200 hover:border-red-500/50 hover:bg-red-950/40'}`}
+                  >
+                    <span className="text-cinnabar font-bold">#</span>
+                    <span>{item.char}</span>
+                    <span className="text-[10px] text-white/30">({item.stageTitle.split('：')[0]})</span>
+                  </button>
+                ))}
+              </div>
+              
+              <AnimatePresence>
+                {activeReviewAnswer && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="p-4 bg-red-950/10 border border-red-500/30 rounded-sm text-xs text-red-200/90 leading-relaxed font-sans relative"
+                  >
+                    <button 
+                      onClick={() => setActiveReviewAnswer(null)}
+                      className="absolute top-2 right-2 text-white/50 hover:text-white text-sm cursor-pointer"
+                    >
+                      ×
+                    </button>
+                    <div className="font-bold mb-1 text-cinnabar">
+                      【{activeReviewAnswer.stageTitle} · 字元：{activeReviewAnswer.char}】
+                    </div>
+                    <div>{activeReviewAnswer.feedback}</div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Right: Interaction Area */}
@@ -215,17 +298,48 @@ export default function PictureBook() {
                       key="success"
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="flex flex-col items-center"
+                      className="flex flex-col w-full gap-6 mt-4"
                     >
-                      <div className="p-6 border border-[#C8A078]/50 bg-[#C8A078]/10 text-[#E8C098] font-serif tracking-widest leading-loose text-center mb-8">
+                      <div className="text-center text-[#C8A078] tracking-[0.2em] text-xs uppercase font-sans font-bold select-none">
+                        字理考據 · 三字釋義複習
+                      </div>
+                      <div className="flex flex-col gap-4 w-full">
+                        {currentStage.options.map((opt, idx) => (
+                          <div 
+                            key={idx}
+                            className={`p-4 border transition-all duration-300 rounded-sm text-left
+                              ${opt.isCorrect 
+                                ? 'border-[#C8A078] bg-[#C8A078]/10 text-[#E8C098]' 
+                                : 'border-white/10 bg-white/5 text-white/70'}`}
+                          >
+                            <div className="flex items-center gap-3 mb-1.5">
+                              <span className={`text-2xl font-serif ${opt.isCorrect ? 'text-[#C8A078] font-bold' : 'text-white/60'}`}>
+                                {opt.char}
+                              </span>
+                              <span className={`text-[10px] font-sans px-2 py-0.5 rounded-sm uppercase tracking-wider
+                                ${opt.isCorrect ? 'bg-[#C8A078]/20 text-[#E8C098]' : 'bg-white/10 text-white/40'}`}>
+                                {opt.isCorrect ? '正確字義' : '旁系字義'}
+                              </span>
+                            </div>
+                            <p className="text-xs font-serif leading-relaxed tracking-wider">
+                              {opt.feedback}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="p-4 border border-[#C8A078]/30 bg-[#C8A078]/5 text-center text-sm font-serif italic text-[#E8C098]/90 tracking-wider">
                         {currentStage.successSemantic}
                       </div>
-                      <button 
-                        onClick={nextStage}
-                        className="px-8 py-3 border border-[#C8A078] text-[#C8A078] hover:bg-[#C8A078] hover:text-white transition-all tracking-[0.3em] font-sans text-sm"
-                      >
-                        {currentStageIndex < MATCHING_GAME_STAGES.length - 1 ? '進入下一幕' : '完成體驗'}
-                      </button>
+
+                      <div className="flex justify-center pt-2">
+                        <button 
+                          onClick={nextStage}
+                          className="px-10 py-3 bg-[#C8A078] text-white hover:bg-[#b08b63] transition-all tracking-[0.3em] font-sans text-xs font-bold rounded-sm shadow-md cursor-pointer"
+                        >
+                          {currentStageIndex < MATCHING_GAME_STAGES.length - 1 ? '進入下一幕' : '完成體驗'}
+                        </button>
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>

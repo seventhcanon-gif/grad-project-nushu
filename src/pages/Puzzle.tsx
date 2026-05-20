@@ -11,6 +11,14 @@ interface GameCard {
   item: typeof MOCK_ARCHIVE[0];
 }
 
+const PUZZLE_COLORS = [
+  '#C84B31', // Cinnabar Red
+  '#3E6D9C', // Indigo Blue
+  '#5F8D4E', // Jade Green
+  '#D6A232', // Amber Gold
+  '#7D5A7A'  // Orchid Purple
+];
+
 export default function Puzzle() {
   const [cards, setCards] = useState<GameCard[]>([]);
   const [roundItems, setRoundItems] = useState<typeof MOCK_ARCHIVE>([]);
@@ -19,6 +27,7 @@ export default function Puzzle() {
   const [isLocked, setIsLocked] = useState(false);
   const [shakeUids, setShakeUids] = useState<string[]>([]);
   const [isWin, setIsWin] = useState(false);
+  const [revealedUids, setRevealedUids] = useState<string[]>([]);
 
   const startNewRound = () => {
     const shuffledItems = [...MOCK_ARCHIVE].sort(() => 0.5 - Math.random()).slice(0, 5);
@@ -34,6 +43,7 @@ export default function Puzzle() {
     setFlippedUids([]);
     setMatchedIds([]);
     setShakeUids([]);
+    setRevealedUids([]);
     setIsLocked(false);
     setIsWin(false);
   };
@@ -52,6 +62,10 @@ export default function Puzzle() {
     if (isLocked) return;
     if (flippedUids.includes(card.uid)) return;
     if (matchedIds.includes(card.refId)) return;
+
+    if (!revealedUids.includes(card.uid)) {
+      setRevealedUids(prev => [...prev, card.uid]);
+    }
 
     const newFlipped = [...flippedUids, card.uid];
     setFlippedUids(newFlipped);
@@ -93,6 +107,10 @@ export default function Puzzle() {
           const isFlipped = flippedUids.includes(card.uid) || matchedIds.includes(card.refId);
           const isMatched = matchedIds.includes(card.refId);
           const isShaking = shakeUids.includes(card.uid);
+          const hasBeenRevealed = revealedUids.includes(card.uid);
+
+          const colorIndex = roundItems.findIndex(item => item.id === card.refId);
+          const cardColor = colorIndex !== -1 ? PUZZLE_COLORS[colorIndex % PUZZLE_COLORS.length] : '#C84B31';
 
           return (
             <motion.div
@@ -112,27 +130,61 @@ export default function Puzzle() {
                 style={{ rotateY: isFlipped ? 180 : 0 }}
               >
                 {/* Back of card (Texture) */}
-                <div className="absolute w-full h-full bg-ink/5 border-2 border-ink/10 flex items-center justify-center backface-hidden shadow-sm">
-                  <div className="w-10 h-10 border border-ink/20 rotate-45 flex items-center justify-center opacity-30">
-                    <div className="w-6 h-6 border border-ink/20"></div>
+                <div 
+                  className="absolute w-full h-full bg-ink/5 border-2 flex items-center justify-center backface-hidden shadow-sm transition-all duration-300"
+                  style={{
+                    borderColor: hasBeenRevealed ? cardColor : 'rgba(44, 44, 44, 0.1)',
+                    backgroundColor: hasBeenRevealed ? `${cardColor}08` : 'rgba(44, 44, 44, 0.05)',
+                  }}
+                >
+                  <div 
+                    className="w-10 h-10 border rotate-45 flex items-center justify-center opacity-30 transition-all duration-300"
+                    style={{ borderColor: hasBeenRevealed ? cardColor : 'rgba(44, 44, 44, 0.2)' }}
+                  >
+                    <div 
+                      className="w-6 h-6 border transition-all duration-300"
+                      style={{ borderColor: hasBeenRevealed ? cardColor : 'rgba(44, 44, 44, 0.2)' }}
+                    ></div>
                   </div>
+                  {hasBeenRevealed && (
+                    <div 
+                      className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full shadow-inner animate-pulse"
+                      style={{ backgroundColor: cardColor }}
+                      title="此牌已翻開過"
+                    />
+                  )}
                 </div>
 
                 {/* Front of card (Content) */}
                 <div 
-                  className="absolute w-full h-full bg-white border border-cinnabar/30 flex items-center justify-center backface-hidden shadow-md flex-col p-4 text-center overflow-hidden"
-                  style={{ transform: 'rotateY(180deg)' }}
+                  className="absolute w-full h-full bg-white border flex items-center justify-center backface-hidden shadow-md flex-col p-4 text-center overflow-hidden transition-all duration-300"
+                  style={{ 
+                    transform: 'rotateY(180deg)',
+                    borderColor: hasBeenRevealed ? cardColor : 'rgba(200, 75, 49, 0.3)',
+                    boxShadow: hasBeenRevealed ? `0 4px 12px ${cardColor}15` : '0 4px 6px rgba(0, 0, 0, 0.05)'
+                  }}
                 >
                   <div className="absolute inset-1 border border-ink/5 pointer-events-none"></div>
                   {card.type === 'char' ? (
                     <>
-                      <span className="text-4xl md:text-5xl font-serif text-cinnabar mb-3">{card.item.char}</span>
+                      <span 
+                        className="text-4xl md:text-5xl font-serif mb-3 transition-colors duration-300"
+                        style={{ color: hasBeenRevealed ? cardColor : '#C84B31' }}
+                      >
+                        {card.item.char}
+                      </span>
                       <img src={card.item.nushuImg} alt="nushu" className="h-10 md:h-12 object-contain opacity-70" />
                     </>
                   ) : (
                     <span className="text-sm md:text-base font-serif leading-relaxed text-ink/80 tracking-widest px-2">
                       {card.item.meaning}
                     </span>
+                  )}
+                  {hasBeenRevealed && (
+                    <div 
+                      className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full"
+                      style={{ backgroundColor: cardColor }}
+                    />
                   )}
                 </div>
               </motion.div>
