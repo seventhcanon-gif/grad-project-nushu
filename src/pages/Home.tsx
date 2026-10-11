@@ -1,9 +1,12 @@
-import { useRef } from 'react';
+import { useState, useRef } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { ArrowRight, BookOpen } from 'lucide-react';
+import NushuDetailModal from '../components/NushuDetailModal';
 
 function IntroSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-10%" });
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <section 
@@ -32,8 +35,21 @@ function IntroSection() {
               它通常被寫在紙扇、手帕或是繡在布面上，承載著女性的喜怒哀樂與生活點滴。
               作為世界上唯一已知的女性專屬文字，女書不僅是語言學上的奇蹟，更是研究古代女性社會關係與情感的重要文化遺產。
             </p>
+            
+            {/* 詳細資訊按鈕（位於右下角） */}
+            <div className="flex justify-end pt-2">
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="group inline-flex items-center gap-2.5 px-5 py-2.5 bg-paper border border-ink/30 hover:border-cinnabar text-ink hover:text-cinnabar transition-all duration-300 rounded-sm font-serif text-sm tracking-widest shadow-sm hover:shadow-md cursor-pointer"
+              >
+                <BookOpen className="w-4 h-4 text-cinnabar/80 group-hover:text-cinnabar transition-colors" />
+                <span>詳細資訊</span>
+                <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
           </div>
         </div>
+
         <div className="flex-1 flex justify-center items-center w-full">
           <div className="w-72 md:w-80 h-[28rem] relative bg-[#FAF9F6] border border-ink/10 shadow-xl flex flex-col items-center justify-center p-8 transform rotate-2 hover:rotate-0 transition-transform duration-500">
             <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-ink/30 m-2"></div>
@@ -44,6 +60,12 @@ function IntroSection() {
           </div>
         </div>
       </motion.div>
+
+      {/* 詳細資訊彈出層 */}
+      <NushuDetailModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
     </section>
   );
 }
