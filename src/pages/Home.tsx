@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { ArrowRight, BookOpen } from 'lucide-react';
 import NushuDetailModal from '../components/NushuDetailModal';
+import SocialFloatingBar from '../components/SocialFloatingBar';
 
 function IntroSection() {
   const ref = useRef(null);
@@ -137,7 +138,8 @@ export default function Home() {
   const textOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   return (
-    <div className="w-full bg-paper">
+    <div className="w-full bg-paper relative">
+      <SocialFloatingBar />
       <div ref={containerRef} className="relative h-[150vh] w-full">
         <motion.div 
           className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden"
