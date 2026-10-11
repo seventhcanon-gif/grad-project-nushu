@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MATCHING_GAME_STAGES, WordOption } from '../data/gameScript';
-import PdfViewer from '../components/PdfViewer';
+import { MATCHING_GAME_STAGES, GAME_CONCLUSION, WordOption } from '../data/gameScript';
 
 // Typewriter hook for narrative immersion
 const useTypewriter = (text: string, speed: number = 50) => {
@@ -111,17 +110,22 @@ export default function PictureBook() {
   // End Screen
   if (currentStageIndex === MATCHING_GAME_STAGES.length) {
     return (
-      <div className="flex flex-col h-[calc(100vh-73px)] w-full bg-[#1E1E1E] relative items-center justify-center text-center p-8">
-        <motion.div
+      <div className="flex flex-col h-[calc(100vh-73px)] w-full bg-[#F4EFEA] relative items-center justify-center text-center p-8">
+        <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
+          transition={{ duration: 1.5 }}
           className="max-w-3xl z-10"
         >
-          <PdfViewer file="/assets/pdf/chuanxie-fanmian-nyushu.pdf" />
-          <button
+          <h2 className="text-4xl md:text-5xl font-serif text-cinnabar mb-12 tracking-widest">
+            語義的重塑
+          </h2>
+          <div className="text-lg md:text-xl font-serif text-ink leading-loose tracking-widest mb-16 border-t border-b border-ink/10 py-10 text-justify">
+            {GAME_CONCLUSION}
+          </div>
+          <button 
             onClick={startGame}
-            className="mt-6 px-8 py-3 bg-ink text-white hover:bg-cinnabar focus:outline-none transition-colors font-sans tracking-widest text-sm"
+            className="px-8 py-3 bg-ink text-white hover:bg-cinnabar focus:outline-none transition-colors font-sans tracking-widest text-sm"
           >
             重新體驗
           </button>
