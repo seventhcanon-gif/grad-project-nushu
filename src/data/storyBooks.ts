@@ -9,7 +9,6 @@ export interface StoryBookItem {
   coverImage?: string;
   layoutMode?: LayoutMode;
   customOrder?: number[];
-  /** 是否為即將推出或未完成狀態 */
   isUpcoming?: boolean;
 }
 
@@ -24,21 +23,30 @@ export const STORY_BOOKS: StoryBookItem[] = [
     layoutMode: 'normal'
   },
   {
-    id: 'gumu-tangjuxian',
-    title: '《谷母溪唐舉仙》',
-    category: '騎馬釘排版',
-    description: '以谷母溪與唐舉仙傳說為背景，揭開女書文化的神秘篇章。系統已自動套用騎馬釘跨頁對切與順序還原。',
-    pdfUrl: '/assets/pdf/〈谷母溪唐舉仙〉騎馬釘排版2.pdf',
-    coverImage: '/assets/stories/cover_2.png',
-    layoutMode: 'saddle_stitch_spread' // 10頁跨頁 PDF，自動分割並以 20 頁騎馬釘順序呈現
+    id: 'nvshu-intro',
+    title: '《女書：寫給女性的文字》',
+    category: '文化特色',
+    description: '在江永的山水之間，細數女書字形菱形細長、筆畫斜向等美感特徵，認識寫給女性的文化記憶。',
+    pdfUrl: '/assets/pdf/女書介紹.pdf',
+    coverImage: '/assets/stories/cover_nvshu.jpg',
+    layoutMode: 'normal'
   },
   {
-    id: 'story-three-upcoming',
-    title: '《第三部繪本故事》',
-    category: '即將推出',
-    description: '第三份繪本故事正在緊鑼密鼓繪製製作中，敬請期待後續更新！',
-    pdfUrl: '',
-    coverImage: '/assets/stories/cover_3.png',
-    isUpcoming: true
+    id: 'gumu-tangjuxian',
+    title: '《谷母溪唐舉仙》',
+    category: '人物傳奇',
+    description: '以大木頭村唐家女出嫁後的命運為題，字裡行間深情訴說女性的心思與生活悲歡。',
+    pdfUrl: '/assets/pdf/谷母溪唐舉仙.pdf',
+    coverImage: '/assets/stories/cover_gumu.jpg',
+    layoutMode: 'normal'
+  },
+  {
+    id: 'sanchao-shu',
+    title: '《紅箋寄情：三朝書的故事》',
+    category: '民俗經典',
+    description: '被世人遺忘的女性文字，記錄結拜姊妹在出嫁三朝時親手織就的祝福與世代深厚情誼。',
+    pdfUrl: '/assets/pdf/三朝書.pdf',
+    coverImage: '/assets/stories/cover_sanchao.jpg',
+    layoutMode: 'normal'
   }
 ];
